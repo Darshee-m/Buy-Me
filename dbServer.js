@@ -40,15 +40,19 @@ app.use(express.json());
 
 //middleware to read req.body.<params>
 //CREATE USER
+app.get("/", (req, res) => {
+  // res.sendStatus(200);
+  res.send('Hello World, from express');
+});
 
 app.post("/createUser", async (req, res) => {
-  const user = req.body.name;
+  const user = req.body.userName;
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   db.getConnection(async (err, connection) => {
     if (err) throw err;
-    const sqlSearch = "SELECT * FROM userTable WHERE user = ?";
+    const sqlSearch = "SELECT * FROM User WHERE userName = ?";
     const search_query = mysql.format(sqlSearch, [user]);
-    const sqlInsert = "INSERT INTO userTable VALUES (0,?,?)";
+    const sqlInsert = "INSERT INTO User (userName, password) VALUES (?,?)";
     const insert_query = mysql.format(sqlInsert, [user, hashedPassword]);
 
     // ? will be replaced by values
