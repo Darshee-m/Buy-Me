@@ -22,28 +22,24 @@ const db = mysql.createPool({
   port: DB_PORT,
 });
 
-
-
-// Starting Express server
-app.listen(PORT, () => console.log(`Server Started on port ${PORT}...`));
-
-
-// DB connection check
-db.getConnection((err, connection) => {
-  if (err) throw err;
-  console.log("DB connected successful: " + connection.threadId);
-});
+module.exports = { db };
 
 
 
 app.use(express.json());
 
+
+app.use(express.static(__dirname + '/public'));
+
+
 //middleware to read req.body.<params>
 //CREATE USER
 app.get("/", (req, res) => {
   // res.sendStatus(200);
-  res.send('Hello World, from express');
+  res.sendFile(__dirname + '/public/login.html')
 });
+
+console.log('Path', __dirname)
 
 app.post("/createUser", async (req, res) => {
   const user = req.body.userName;
